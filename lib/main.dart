@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'firebase_options.dart';
 import 'services/auth_service.dart';
+import 'pages/home_page.dart';
 
 void main() async {
   //firebase baslttik
@@ -69,47 +70,6 @@ class _AuthWrapperState extends State<AuthWrapper> {
           ),
         );
       },
-    );
-  }
-}
-
-// BASİT BİR ANA SAYFA (Şimdilik test için)
-class HomePage extends StatelessWidget {
-  final String uid;
-  const HomePage({super.key, required this.uid});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text("Neo Card Panel")),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(Icons.nfc, size: 100, color: Colors.deepPurple),
-            const SizedBox(height: 20),
-            const Text(
-              "Hoş Geldin Hayalet!",
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 10),
-            const Text("Senin Eşsiz ID'n:"),
-            Container(
-              padding: const EdgeInsets.all(10),
-              margin: const EdgeInsets.all(20),
-              color: Colors.grey[200],
-              child: SelectableText(
-                // Kopyalanabilsin diye
-                uid,
-                style: const TextStyle(
-                  fontFamily: 'Courier',
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }
