@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "758254647887",
+    "project_id": "neo-card-app",
+    "storage_bucket": "neo-card-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:758254647887:android:f5763a6e4f2cdb1609883a",
+        "android_client_info": {
+          "package_name": "com.example.neo_card"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB7w9rxnjGLYeGoaH6z7goHHtuS7g4k0VY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
