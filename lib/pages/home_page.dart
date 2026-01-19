@@ -84,6 +84,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _writeToNfc() async {
+    // NFC Kontrolü
     bool isAvailable = await _nfcService.checkAvailability();
     if (!isAvailable) {
       _showError("Cihazınızda NFC yok veya kapalı!");
@@ -97,11 +98,11 @@ class _HomePageState extends State<HomePage> {
     );
 
     try {
-      // Linki Oluştur: https://neocard.app/p/UID
-      // şimdilik test domaini
-      String link = "https://neocard.app/p/${widget.uid}";
+      // Link oluştur // https://neo-card-app.web.app
+      String link = "https://neo-card-app.web.app/p/${widget.uid}";
 
-      //yaz
+      print("Yazılacak Link: $link");
+      // Karta Yaz
       await _nfcService.writeNfc(link, lock: false);
 
       if (mounted) {
