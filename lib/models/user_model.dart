@@ -1,21 +1,23 @@
 class UserModel {
-  final String uid; // Firebase ID
+  final String uid;
   final String name;
-  final String jobTitle; // Unvan
+  final String jobTitle;
   final String email;
-  final String profilePhoto;
-  final Map<String, dynamic> links; // Sosyal Medya Linkleri
+  final String phoneNumber;
+  final String profilePhotoUrl;
+  final String website;
+  final Map<String, dynamic> socialLinks;
 
   UserModel({
     required this.uid,
     required this.name,
     required this.jobTitle,
     required this.email,
-    required this.profilePhoto,
-    required this.links,
+    required this.phoneNumber,
+    required this.profilePhotoUrl,
+    required this.website,
+    required this.socialLinks,
   });
-
-  // Veritabanından gelen veriyi okur.
 
   factory UserModel.fromMap(Map<String, dynamic> map) {
     return UserModel(
@@ -23,21 +25,23 @@ class UserModel {
       name: map['name'] ?? '',
       jobTitle: map['jobTitle'] ?? '',
       email: map['email'] ?? '',
-      profilePhoto: map['profilePhoto'] ?? '',
-      // Linkleri Map formatında alıyoruz
-      links: Map<String, dynamic>.from(map['links'] ?? {}),
+      phoneNumber: map['phoneNumber'] ?? '',
+      profilePhotoUrl: map['profilePhotoUrl'] ?? '',
+      website: map['website'] ?? '',
+      socialLinks: Map<String, dynamic>.from(map['socialLinks'] ?? {}),
     );
   }
 
-  // Veritabanına kaydederken kullanırız.
   Map<String, dynamic> toMap() {
     return {
       'uid': uid,
       'name': name,
       'jobTitle': jobTitle,
       'email': email,
-      'profilePhoto': profilePhoto,
-      'links': links,
+      'phoneNumber': phoneNumber,
+      'profilePhotoUrl': profilePhotoUrl,
+      'website': website,
+      'socialLinks': socialLinks,
     };
   }
 }
