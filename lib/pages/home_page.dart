@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'dart:io';
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import '../models/user_model.dart';
@@ -15,25 +15,22 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  // Servisler
   final DatabaseService _dbService = DatabaseService();
   final NfcService _nfcService = NfcService();
   final ImagePicker _picker = ImagePicker();
 
-  // Controllers
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _websiteController = TextEditingController();
 
-  // Sosyal Medya
   final TextEditingController _instagramController = TextEditingController();
   final TextEditingController _twitterController = TextEditingController();
   final TextEditingController _linkedinController = TextEditingController();
 
-  File? _selectedImage;
-  String? _currentPhotoData; //Görsel için BASE64 kullanıyoruz mecbur
+  Uint8List? _selectedImageBytes;
+  String? _currentPhotoData;
   bool _isLoading = false;
 
   @override
@@ -52,10 +49,7 @@ class _HomePageState extends State<HomePage> {
         _emailController.text = user.email;
         _phoneController.text = user.phoneNumber;
         _websiteController.text = user.website;
-
         _currentPhotoData = user.profilePhotoUrl;
-
-        // Sosyal Medya
         _instagramController.text = user.socialLinks['instagram'] ?? '';
         _twitterController.text = user.socialLinks['twitter'] ?? '';
         _linkedinController.text = user.socialLinks['linkedin'] ?? '';
@@ -64,22 +58,21 @@ class _HomePageState extends State<HomePage> {
     if (mounted) setState(() => _isLoading = false);
   }
 
-  // FOTOĞRAF SEÇME VE KÜÇÜLTME
   void _pickPhoto() async {
     try {
       final XFile? image = await _picker.pickImage(
         source: ImageSource.gallery,
-        maxWidth: 400, // Resmi küçültüyoz database şişmesin
-        imageQuality: 60,
+        maxWidth: 300,
+        imageQuality: 50,
       );
-
       if (image != null) {
+        final bytes = await image.readAsBytes();
         setState(() {
-          _selectedImage = File(image.path);
+          _selectedImageBytes = bytes;
         });
       }
     } catch (e) {
-      debugPrint("Resim seçme hatası: $e");
+      debugPrint("Resim hatası: $e");
     }
   }
 
@@ -95,11 +88,8 @@ class _HomePageState extends State<HomePage> {
 
     try {
       String photoData = _currentPhotoData ?? "";
-
-      // base64'e çevir
-      if (_selectedImage != null) {
-        List<int> imageBytes = await _selectedImage!.readAsBytes();
-        photoData = base64Encode(imageBytes);
+      if (_selectedImageBytes != null) {
+        photoData = base64Encode(_selectedImageBytes!);
       }
 
       UserModel newUser = UserModel(
@@ -118,11 +108,10 @@ class _HomePageState extends State<HomePage> {
       );
 
       await _dbService.saveUser(newUser);
-
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text("✅ Bilgiler ve Resim Kaydedildi!"),
+            content: Text("✅ Profil Güncellendi!"),
             backgroundColor: Colors.green,
           ),
         );
@@ -134,32 +123,28 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  // NFC
   void _writeToNfc() async {
     bool isAvailable = await _nfcService.checkAvailability();
     if (!isAvailable) {
-      _showError("Cihazınızda NFC yok veya kapalı!");
+      _showError("NFC kapalı!");
       return;
     }
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text("⏳ Kartı telefonun arkasına yaklaştırın..."),
-      ),
-    );
-
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text("⏳ Kartı yaklaştırın...")));
     try {
       String link = "https://neo-card-app.web.app/p/${widget.uid}";
       await _nfcService.writeNfc(link, lock: false);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text("✅ Kart Başarıyla Yazıldı!"),
+            content: Text("✅ Kart Yazıldı!"),
             backgroundColor: Colors.green,
           ),
         );
       }
     } catch (e) {
-      _showError("NFC Hatası: $e");
+      _showError("Hata: $e");
     }
   }
 
@@ -173,134 +158,245 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     ImageProvider? imageProvider;
-
-    if (_selectedImage != null) {
-      imageProvider = FileImage(_selectedImage!);
+    if (_selectedImageBytes != null) {
+      imageProvider = MemoryImage(_selectedImageBytes!);
     } else if (_currentPhotoData != null && _currentPhotoData!.isNotEmpty) {
       if (_currentPhotoData!.startsWith('http')) {
         imageProvider = NetworkImage(_currentPhotoData!);
       } else {
         try {
           imageProvider = MemoryImage(base64Decode(_currentPhotoData!));
-          // ignore: empty_catches
-        } catch (e) {}
+        } catch (_) {}
       }
     }
 
     return Scaffold(
+      backgroundColor: Colors.grey[50],
       appBar: AppBar(
-        title: const Text("Kartvizit Düzenle"),
-        backgroundColor: Colors.deepPurple[100],
+        title: const Text(
+          "NeoCard Editör",
+          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+        ),
+        backgroundColor: Colors.deepPurple,
+        elevation: 0,
+        centerTitle: true,
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
               padding: const EdgeInsets.all(20),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
+                  // PROFİL FOTOĞRAFI ALANI
                   Center(
-                    child: GestureDetector(
-                      onTap: _pickPhoto,
-                      child: CircleAvatar(
-                        radius: 50,
-                        backgroundColor: Colors.grey[300],
-                        backgroundImage: imageProvider,
-                        child: imageProvider == null
-                            ? const Icon(
-                                Icons.add_a_photo,
-                                size: 40,
-                                color: Colors.grey,
-                              )
-                            : null,
+                    child: Stack(
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              color: Colors.deepPurple,
+                              width: 3,
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black12,
+                                blurRadius: 10,
+                                spreadRadius: 2,
+                              ),
+                            ],
+                          ),
+                          child: CircleAvatar(
+                            radius: 60,
+                            backgroundColor: Colors.white,
+                            backgroundImage: imageProvider,
+                            child: imageProvider == null
+                                ? const Icon(
+                                    Icons.person,
+                                    size: 60,
+                                    color: Colors.grey,
+                                  )
+                                : null,
+                          ),
+                        ),
+                        Positioned(
+                          bottom: 0,
+                          right: 0,
+                          child: InkWell(
+                            onTap: _pickPhoto,
+                            child: Container(
+                              padding: const EdgeInsets.all(8),
+                              decoration: const BoxDecoration(
+                                color: Colors.deepPurple,
+                                shape: BoxShape.circle,
+                              ),
+                              child: const Icon(
+                                Icons.camera_alt,
+                                color: Colors.white,
+                                size: 20,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 25),
+
+                  // KİŞİSEL BİLGİLER KARTI
+                  _buildCardContainer(
+                    title: "Kişisel Bilgiler",
+                    icon: Icons.person_outline,
+                    children: [
+                      _buildTextField(
+                        _nameController,
+                        "Ad Soyad",
+                        Icons.person,
                       ),
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  const Center(
-                    child: Text(
-                      "Fotoğrafı Değiştirmek İçin Dokun",
-                      style: TextStyle(fontSize: 12, color: Colors.grey),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-
-                  _buildSectionTitle("Kişisel Bilgiler"),
-                  _buildTextField(_nameController, "Ad Soyad", Icons.person),
-                  const SizedBox(height: 10),
-                  _buildTextField(
-                    _titleController,
-                    "Unvan / Meslek",
-                    Icons.work,
-                  ),
-                  const SizedBox(height: 10),
-                  _buildTextField(
-                    _phoneController,
-                    "Telefon Numarası",
-                    Icons.phone,
-                    type: TextInputType.phone,
-                  ),
-                  const SizedBox(height: 10),
-                  _buildTextField(
-                    _emailController,
-                    "E-Posta Adresi",
-                    Icons.email,
-                    type: TextInputType.emailAddress,
-                  ),
-                  const SizedBox(height: 10),
-                  _buildTextField(
-                    _websiteController,
-                    "Kişisel Web Sitesi (Opsiyonel)",
-                    Icons.language,
+                      const SizedBox(height: 15),
+                      _buildTextField(
+                        _titleController,
+                        "Unvan / Meslek",
+                        Icons.work_outline,
+                      ),
+                      const SizedBox(height: 15),
+                      _buildTextField(
+                        _phoneController,
+                        "Telefon",
+                        Icons.phone,
+                        type: TextInputType.phone,
+                      ),
+                      const SizedBox(height: 15),
+                      _buildTextField(
+                        _emailController,
+                        "E-Posta",
+                        Icons.email_outlined,
+                        type: TextInputType.emailAddress,
+                      ),
+                      const SizedBox(height: 15),
+                      _buildTextField(
+                        _websiteController,
+                        "Web Sitesi",
+                        Icons.language,
+                      ),
+                    ],
                   ),
 
                   const SizedBox(height: 20),
 
-                  _buildSectionTitle("Sosyal Medya"),
-                  _buildTextField(
-                    _instagramController,
-                    "Instagram Kullanıcı Adı",
-                    Icons.camera_alt,
-                  ),
-                  const SizedBox(height: 10),
-                  _buildTextField(
-                    _twitterController,
-                    "X (Twitter) Kullanıcı Adı",
-                    Icons.alternate_email,
-                  ),
-                  const SizedBox(height: 10),
-                  _buildTextField(
-                    _linkedinController,
-                    "LinkedIn Profil Linki",
-                    Icons.business,
+                  //SOSYAL MEDYA KARTI
+                  _buildCardContainer(
+                    title: "Sosyal Medya",
+                    icon: Icons.share,
+                    children: [
+                      _buildTextField(
+                        _instagramController,
+                        "Instagram Kullanıcı Adı",
+                        Icons.camera_alt_outlined,
+                      ),
+                      const SizedBox(height: 15),
+                      _buildTextField(
+                        _twitterController,
+                        "X (Twitter) Kullanıcı Adı",
+                        Icons.alternate_email,
+                      ),
+                      const SizedBox(height: 15),
+                      _buildTextField(
+                        _linkedinController,
+                        "LinkedIn Profil Linki",
+                        Icons.business_center_outlined,
+                      ),
+                    ],
                   ),
 
                   const SizedBox(height: 30),
 
-                  ElevatedButton.icon(
-                    onPressed: _saveData,
-                    icon: const Icon(Icons.save),
-                    label: const Text("KAYDET"),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.deepPurple,
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(vertical: 15),
+                  //BUTONLAR
+                  SizedBox(
+                    width: double.infinity,
+                    height: 55,
+                    child: ElevatedButton(
+                      onPressed: _saveData,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.deepPurple,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        elevation: 5,
+                      ),
+                      child: const Text(
+                        "DEĞİŞİKLİKLERİ KAYDET",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
                     ),
                   ),
                   const SizedBox(height: 15),
-                  ElevatedButton.icon(
-                    onPressed: _writeToNfc,
-                    icon: const Icon(Icons.nfc),
-                    label: const Text("NFC KARTA YAZ"),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.black87,
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(vertical: 15),
+                  SizedBox(
+                    width: double.infinity,
+                    height: 55,
+                    child: OutlinedButton.icon(
+                      onPressed: _writeToNfc,
+                      icon: const Icon(Icons.nfc),
+                      label: const Text("NFC KARTA YAZ"),
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: Colors.black87,
+                        side: const BorderSide(color: Colors.black87, width: 2),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
                     ),
                   ),
+                  const SizedBox(height: 20),
                 ],
               ),
             ),
+    );
+  }
+
+  Widget _buildCardContainer({
+    required String title,
+    required IconData icon,
+    required List<Widget> children,
+  }) {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.1),
+            blurRadius: 10,
+            offset: const Offset(0, 5),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(icon, color: Colors.deepPurple),
+              const SizedBox(width: 10),
+              Text(
+                title,
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black87,
+                ),
+              ),
+            ],
+          ),
+          const Divider(height: 30),
+          ...children,
+        ],
+      ),
     );
   }
 
@@ -315,27 +411,16 @@ class _HomePageState extends State<HomePage> {
       keyboardType: type,
       decoration: InputDecoration(
         labelText: label,
-        prefixIcon: Icon(icon),
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+        prefixIcon: Icon(icon, color: Colors.grey[600]),
         filled: true,
-        fillColor: Colors.grey[50],
-        contentPadding: const EdgeInsets.symmetric(
-          vertical: 15,
-          horizontal: 15,
+        fillColor: Colors.grey[100],
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide.none,
         ),
-      ),
-    );
-  }
-
-  Widget _buildSectionTitle(String title) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 10),
-      child: Text(
-        title,
-        style: const TextStyle(
-          fontWeight: FontWeight.bold,
-          fontSize: 18,
-          color: Colors.deepPurple,
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 16,
         ),
       ),
     );

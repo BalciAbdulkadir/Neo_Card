@@ -1,3 +1,6 @@
+//FOTOĞRAFLAR İÇİN GOOGLE CLOUD KULLANILIRSA GEREKLİ OLAN KODLAR.
+//ŞİMDİLİK BİR İŞE YARAMIYOR BASE64 KULLANIYOZ
+
 import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
