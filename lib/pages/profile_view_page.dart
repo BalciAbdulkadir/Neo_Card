@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../models/user_model.dart';
 import '../services/database_service.dart';
 
@@ -202,20 +203,20 @@ class _ProfileViewPageState extends State<ProfileViewPage> {
                               true)
                             _buildSocialButton(
                               "Instagram",
-                              Icons.camera_alt,
+                              FontAwesomeIcons.instagram,
                               "https://instagram.com/${_user!.socialLinks['instagram']}",
                             ),
                           if (_user!.socialLinks['twitter']?.isNotEmpty == true)
                             _buildSocialButton(
                               "X (Twitter)",
-                              Icons.alternate_email,
+                              FontAwesomeIcons.twitter,
                               "https://x.com/${_user!.socialLinks['twitter']}",
                             ),
                           if (_user!.socialLinks['linkedin']?.isNotEmpty ==
                               true)
                             _buildSocialButton(
                               "LinkedIn",
-                              Icons.business,
+                              FontAwesomeIcons.linkedin,
                               _user!.socialLinks['linkedin']!,
                             ),
                         ],
