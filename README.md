@@ -62,11 +62,9 @@ Projeyi kendi bilgisayarında çalıştırmak için aşağıdaki adımları izle
    ```
 ## 📱 Ekran Görüntüleri
 
-### Web Görüntüleme Arayüzü
-![Web Görüntüleme Arayüzü](webui.png)
-
-### Mobil Uygulama
-![Mobil Uygulama](editor.png)
+| Mobil Uygulama) | Web Arayüzü | 
+|:--------------------:|:--------------------:|
+| <img src="editor.png" width="250" /> | <img src="webui.png" width="250" /> | 
 
 
 ## 📜 Lisans
