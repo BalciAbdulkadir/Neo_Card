@@ -60,7 +60,13 @@ Projeyi kendi bilgisayarında çalıştırmak için aşağıdaki adımları izle
    ```bash
    flutter run
    ```
+## 📱 Ekran Görüntüleri
 
+### Web Görüntüleme Arayüzü
+![Web Görüntüleme Arayüzü](webui.png)
+
+### Mobil Uygulama
+![Mobil Uygulama](editor.png)
 
 
 ## 📜 Lisans
