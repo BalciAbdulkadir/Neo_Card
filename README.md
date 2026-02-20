@@ -46,4 +46,4 @@ Gereksinimler
 
 Kurulum
 
-    Depoyu klonlayın: git clone [(https://github.com/BalciAbdulkadir/Neo_Card.git)](https://github.com/BalciAbdulkadir/Neo_Card.git)
+    Depoyu klonlayın: git clone **[(https://github.com/BalciAbdulkadir/Neo_Card.git)](https://github.com/BalciAbdulkadir/Neo_Card.git)**
