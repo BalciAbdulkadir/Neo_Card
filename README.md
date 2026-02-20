@@ -3,7 +3,7 @@
 ![Flutter](https://img.shields.io/badge/Flutter-%2302569B.svg?style=for-the-badge&logo=Flutter&logoColor=white)
 ![Firebase](https://img.shields.io/badge/Firebase-039BE5?style=for-the-badge&logo=Firebase&logoColor=white)
 ![Dart](https://img.shields.io/badge/Dart-0175C2?style=for-the-badge&logo=dart&logoColor=white)
-![License](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)
+![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg?style=for-the-badge)
 
 Neo Card, kullanıcıların kendi dijital kimliklerini ve profillerini fiziksel NFC kartlara (özellikle NTAG215) yazıp okuyabilmesini sağlayan, Flutter ve Firebase tabanlı modern bir mobil uygulamadır.
 
@@ -32,7 +32,6 @@ lib/
 │   └── storage_service.dart   # Dosya yükleme/indirme işlemleri
 ├── main.dart       # Uygulamanın giriş noktası
 
-
 🚀 Başlarken
 
 Projeyi kendi bilgisayarında çalıştırmak için aşağıdaki adımları izleyebilirsin.
@@ -46,4 +45,4 @@ Gereksinimler
 
 Kurulum
 
-    Depoyu klonlayın: git clone git clone [https://github.com/BalciAbdulkadir/neo_card.git](https://github.com/BalciAbdulkadir/neo_card.git)
+    Depoyu klonlayın: git clone [https://github.com/BalciAbdulkadir/Neo_Card.git](https://github.com/BalciAbdulkadir/Neo_Card.git)
