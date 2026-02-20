@@ -31,18 +31,38 @@ lib/
 │   ├── nfc_service.dart       # NFC donanım iletişimi
 │   └── storage_service.dart   # Dosya yükleme/indirme işlemleri
 ├── main.dart       # Uygulamanın giriş noktası
+```
 
-🚀 Başlarken
+## 🚀 Başlarken
 
 Projeyi kendi bilgisayarında çalıştırmak için aşağıdaki adımları izleyebilirsin.
-Gereksinimler
 
-    Flutter SDK (Güncel sürüm)
+### Gereksinimler
+- [Flutter SDK](https://flutter.dev/docs/get-started/install) (Güncel sürüm)
+- Firebase projesi (Google-services.json ve GoogleService-Info.plist dosyaları ayarlanmış olmalı)
+- NFC destekli bir fiziksel mobil cihaz (Emülatörler NFC testleri için yetersizdir)
 
-    Firebase projesi (Google-services.json ve GoogleService-Info.plist dosyaları ayarlanmış olmalı)
+### Kurulum
 
-    NFC destekli bir fiziksel mobil cihaz (Emülatörler NFC testleri için yetersizdir)
+1. Depoyu klonlayın:
+   ```bash
+   git clone [https://github.com/BalciAbdulkadir/Neo_Card.git](https://github.com/BalciAbdulkadir/Neo_Card.git)
+   ```
+2. Proje dizinine gidin:
+   ```bash
+   cd Neo_Card
+   ```
+3. Bağımlılıkları yükleyin:
+   ```bash
+   flutter pub get
+   ```
+4. Uygulamayı derleyin ve çalıştırın:
+   ```bash
+   flutter run
+   ```
 
-Kurulum
 
-    Depoyu klonlayın: git clone [https://github.com/BalciAbdulkadir/Neo_Card.git](https://github.com/BalciAbdulkadir/Neo_Card.git)
+
+## 📜 Lisans
+
+Bu proje [Apache License 2.0](LICENSE) altında lisanslanmıştır. Daha fazla bilgi için `LICENSE` dosyasına göz atabilirsiniz.
