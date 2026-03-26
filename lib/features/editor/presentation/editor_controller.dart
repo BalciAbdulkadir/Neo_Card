@@ -87,16 +87,25 @@ class EditorController extends AsyncNotifier<EditorState> {
     });
   }
 
-  Future<void> addLink(String platform, String url) async {
+  Future<void> upsertLink({String? id, required String platform, required String url}) async {
     if (state.value == null) return;
     state = const AsyncValue.loading();
     state = await AsyncValue.guard(() async {
       final currentLinks = state.value!.links;
+      int order = currentLinks.length;
+      
+      if (id != null) {
+        try {
+          order = currentLinks.firstWhere((l) => l.id == id).orderIndex;
+        } catch (_) {}
+      }
+
       final newLink = UserLinkModel(
+        id: id,
         profileId: _userId,
         platform: platform,
         url: url,
-        orderIndex: currentLinks.length, // Put at bottom
+        orderIndex: order,
       );
       await _repo.upsertUserLink(newLink);
       return _fetchData();

@@ -12,6 +12,43 @@ class Validators {
     return url;
   }
 
+  static String formatSocialUrl(String platform, String input) {
+    if (input.trim().isEmpty) return '';
+    var val = input.trim();
+    
+    // Zaten http veya https içeriyorsa doğrudan formatUrl'ye at
+    if (val.startsWith('http://') || val.startsWith('https://')) {
+      return formatUrl(val);
+    }
+
+    // Kullanıcı adı girildiyse platformlara göre akıllı prefix at
+    switch (platform.toLowerCase()) {
+      case 'instagram':
+        if (!val.contains('instagram.com')) {
+          val = 'https://instagram.com/${val.replaceAll('@', '')}';
+        }
+        break;
+      case 'x':
+      case 'twitter':
+        if (!val.contains('x.com') && !val.contains('twitter.com')) {
+          val = 'https://x.com/${val.replaceAll('@', '')}';
+        }
+        break;
+      case 'linkedin':
+        if (!val.contains('linkedin.com')) {
+          val = 'https://linkedin.com/in/$val';
+        }
+        break;
+      case 'website':
+        val = formatUrl(val);
+        break;
+      default:
+        val = formatUrl(val);
+    }
+    
+    return val.startsWith('http') ? val : 'https://$val';
+  }
+
   static Map<String, String> parsePhone(String input) {
     if (input.trim().isEmpty) return {'countryCode': 'TR', 'number': ''};
     try {
