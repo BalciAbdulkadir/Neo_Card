@@ -34,22 +34,29 @@ final appRouterProvider = Provider<GoRouter>((ref) {
     refreshListenable: refreshStream,
     redirect: (context, state) {
       final session = Supabase.instance.client.auth.currentSession;
-      final isGoingToLogin = state.uri.path == '/login';
-      final isPublicProfile = state.matchedLocation.startsWith('/p/');
-      // Açık profilleri herkes görebilir, oturum zorunluluğunu bypass et
-      if (isPublicProfile) return null;
 
-      // Oturum yok ve login'e gitmiyorsa login'e at
+      // state.matchedLocation yerine state.uri.path kullanıyoruz, bu asla şaşmaz!
+      final path = state.uri.path;
+      final isGoingToLogin = path == '/login';
+
+      // URL'nin içinde /p/ geçiyorsa (profil sayfasıysa) bekçiyi hemen uyut
+      final isPublicProfile = path.startsWith('/p/');
+
+      if (isPublicProfile) {
+        return null; // "Sen geç kardeş, misafirsin" diyoruz
+      }
+
+      // Oturum yoksa ve login'e gitmiyorsa login'e at
       if (session == null && !isGoingToLogin) {
         return '/login';
       }
 
-      // Oturum varsa ve login'e gitmeye çalışıyorsa editor'e at
+      // Oturum varsa ve login'e gitmeye çalışıyorsa editor'e fırlat
       if (session != null && isGoingToLogin) {
         return '/editor';
       }
 
-      return null;
+      return null; // Diğer her durumda yolunda git
     },
     routes: [
       GoRoute(path: '/login', builder: (context, state) => const LoginPage()),
