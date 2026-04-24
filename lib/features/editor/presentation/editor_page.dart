@@ -235,7 +235,7 @@ class _EditorPageState extends ConsumerState<EditorPage> {
   }
 
   void _startNfcWriteProcess(String uid) {
-    final url = 'https://neocard-one.vercel.app/#/p/$uid';
+    final url = 'https://neocard-one.vercel.app/p/$uid';
 
     showModalBottomSheet(
       context: context,

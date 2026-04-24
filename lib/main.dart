@@ -9,6 +9,7 @@ import 'core/theme/app_theme.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   usePathUrlStrategy();
 
   try {
