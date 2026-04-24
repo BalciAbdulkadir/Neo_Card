@@ -33,8 +33,8 @@ final appRouterProvider = Provider<GoRouter>((ref) {
     refreshListenable: refreshStream,
     redirect: (context, state) {
       final session = Supabase.instance.client.auth.currentSession;
-      final isGoingToLogin = state.matchedLocation == '/login';
-      final isPublicProfile = state.matchedLocation.startsWith('/p/');
+      final isGoingToLogin = state.uri.path == '/login';
+      final isPublicProfile = state.uri.path.startsWith('/p/');
 
       // Açık profilleri herkes görebilir, oturum zorunluluğunu bypass et
       if (isPublicProfile) return null;
