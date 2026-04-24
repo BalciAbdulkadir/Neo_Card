@@ -6,6 +6,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../features/auth/presentation/login_page.dart';
 import '../../features/editor/presentation/editor_page.dart';
 import '../../features/profile/presentation/profile_view_page.dart';
+
 class GoRouterRefreshStream extends ChangeNotifier {
   GoRouterRefreshStream(Stream<dynamic> stream) {
     notifyListeners();
@@ -34,8 +35,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
     redirect: (context, state) {
       final session = Supabase.instance.client.auth.currentSession;
       final isGoingToLogin = state.uri.path == '/login';
-      final isPublicProfile = state.uri.path.startsWith('/p/');
-
+      final isPublicProfile = state.matchedLocation.startsWith('/p/');
       // Açık profilleri herkes görebilir, oturum zorunluluğunu bypass et
       if (isPublicProfile) return null;
 
@@ -53,10 +53,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
     },
     routes: [
       GoRoute(path: '/login', builder: (context, state) => const LoginPage()),
-      GoRoute(
-        path: '/editor',
-        builder: (context, state) => const EditorPage(),
-      ),
+      GoRoute(path: '/editor', builder: (context, state) => const EditorPage()),
       GoRoute(
         path: '/p/:uid',
         builder: (context, state) {
