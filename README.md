@@ -1,16 +1,32 @@
-# neo_cord_v2
+# 📇 Neo Card - NFC Tabanlı Dijital Kartvizit
 
-A new Flutter project.
+Bu proje, fiziksel NFC kartlarını (NTAG215 vb.) modern ve dinamik bir dijital kimliğe dönüştüren, Flutter ile geliştirilmiş uçtan uca bir sistemdir. Kullanıcılar bilgilerini güncelleyebilir, verilerini NFC çipine kazıyabilir ve kartı dokundurdukları anda özelleştirilmiş profillerini web üzerinden paylaşabilirler.
 
-## Getting Started
+## 🚀 Öne Çıkan Özellikler
 
-This project is a starting point for a Flutter application.
+- **NFC/NDEF Yazma:** Verileri doğrudan fiziksel çipe NDEF formatında, bayt seviyesinde hassasiyetle kazır.
+- **Supabase Entegrasyonu:** Güçlü kimlik doğrulama (Auth) ve gerçek zamanlı veritabanı yönetimi.
+- **Dinamik Profil Yönetimi:** Riverpod ile yönetilen esnek veri yapısı ve görsel düzenleyici.
+- **Web Vitrini:** Vercel üzerinde barındırılan, SEO dostu ve hızlı yüklenen kullanıcı profilleri.
+- **Modern UI/UX:** Platform spesifik renk vurguları, derinlikli kart tasarımları ve akıllı ikon yönetimi.
 
-A few resources to get you started if this is your first Flutter project:
+## 🛠️ Teknik Yığın (Tech Stack)
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+- **Framework:** Flutter (Android, Web)
+- **State Management:** Flutter Riverpod
+- **Backend:** Supabase (Auth & Database)
+- **NFC:** nfc_manager & nfc_manager_ndef
+- **Deployment:** Vercel (Web Hosting)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## 📦 Kurulum ve Çalıştırma
+
+1. Projeyi klonlayın.
+2. `lib/core/config/app_config.dart` içindeki Supabase anahtarlarını kendi bilgilerinizle güncelleyin.
+3. Bağımlılıkları yükleyin: `flutter pub get`
+4. Uygulamayı çalıştırın: `flutter run`
+
+## 📝 Notlar
+Bu uygulama, geliştirme aşamasında `neocard-one.vercel.app` üzerinden test edilmiştir. NFC yazma işlemi için Android cihazlarda NFC izni verilmiş olmalıdır.
+
+---
+*Developed with Balci*
