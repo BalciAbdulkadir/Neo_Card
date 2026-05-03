@@ -1,4 +1,4 @@
-# 📇 Neo Card - Uçtan Uca NFC Dijital Kimlik Sistemi
+# 📇 Neo Card -  NFC Dijital Kimlik Sistemi
 
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 ![Flutter](https://img.shields.io/badge/Flutter-%3E%3D3.10-blue?logo=flutter)
@@ -47,3 +47,55 @@ flutter run
 
 ## 📄 Lisans
 Bu proje MIT Lisansı altında lisanslanmıştır. Detaylar için LICENSE dosyasına bakabilirsiniz.
+
+---
+
+# 📇 Neo Card - NFC Digital Identity System
+
+![License](https://img.shields.io/badge/license-MIT-blue.svg)
+![Flutter](https://img.shields.io/badge/Flutter-%3E%3D3.10-blue?logo=flutter)
+![State Management](https://img.shields.io/badge/State%20Management-Riverpod-blueviolet)
+![Database](https://img.shields.io/badge/Backend-Supabase-green?logo=supabase)
+
+In this full-stack Flutter project where I combine physical hardware (NFC) with modern web technologies, I have designed an end-to-end system that transforms physical business cards into dynamic digital identities.
+
+## 🚀 Architectural Highlights
+* **Hardware Integration (NFC/NDEF):** Established byte-level communication with physical NTAG215 chips, implementing native hardware bridges (NFC Manager) to enable zero-latency NDEF writing of digital profile URLs directly to the hardware.
+* **Reactive State Management & Data Flow:** Managed complex internal data flows (user profiles, links, UI states) using the Riverpod architecture to ensure asynchronous and high-performance UI updates.
+* **Backend as a Service (BaaS) & Security:** Integrated Supabase for robust authentication and real-time relational database management. Ensured secure handling of user data (1:N relational social media links).
+* **Dynamic Web Showcase & Routing:** Developed SEO-friendly web profiles hosted on Vercel using GoRouter and Path URL Strategy (Hash-free routing), providing cross-platform access in seconds.
+* **User Experience (UI/UX):** Reduced server load by optimizing local media processing (Image Compression) and delivered a modern interface compliant with platform-specific design guidelines.
+
+## 🛠️ Technologies Used
+* **Frontend:** Flutter (Mobile & Web)
+* **State Management:** Riverpod
+* **Backend:** Supabase (Auth, Postgres)
+* **Hardware Integration:** NFC Manager, NDEF
+* **Routing:** GoRouter
+* **Hosting:** Vercel
+
+## 📦 Installation and Setup
+
+1. Clone the repository:
+```bash
+git clone [https://github.com/BalciAbdulkadir/Neo_Card.git](https://github.com/BalciAbdulkadir/Neo_Card.git)
+```
+
+2. Install dependencies:
+```bash
+flutter pub get
+```
+
+3. Create a `.env` file in the root directory and enter your Supabase credentials:
+```env
+SUPABASE_URL=your_supabase_url
+SUPABASE_ANON_KEY=your_supabase_anon_key
+```
+
+4. Run the application:
+```bash
+flutter run
+```
+
+## 📄 License
+This project is licensed under the MIT License. See the LICENSE file for details.
